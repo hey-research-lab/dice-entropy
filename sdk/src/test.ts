@@ -19,6 +19,11 @@ async function main() {
   const protocolFee = await dice.getProtocolFee();
   console.log('Protocol Fee:', protocolFee.toString(), 'wei');
 
+  // Read the fee for a callback gas limit, as requestRandom() does before every request
+  const feeWithGas = await dice.getFee(defaultProvider, 200000);
+  console.log('Fee for 200,000 callback gas:', feeWithGas.toString(), 'wei');
+  if (feeWithGas !== protocolFee) throw new Error(`Unexpected fee for a gas limit: ${feeWithGas}`);
+
   // Read provider info
   const info = await dice.getProviderInfo(defaultProvider);
   console.log('Provider Info:');

@@ -115,7 +115,8 @@ export class DiceProtocol {
   async getFee(provider?: string, gasLimit?: number): Promise<bigint> {
     const p = provider || (await this.getDefaultProvider());
     if (gasLimit !== undefined) {
-      return await this.contract.getFeeV2(p, gasLimit);
+      // getFeeV2 is overloaded; ethers cannot pick between (address,uint32) and (uint32) from the arguments alone
+      return await this.contract['getFeeV2(address,uint32)'](p, gasLimit);
     }
     return await this.contract.getFee(p);
   }
