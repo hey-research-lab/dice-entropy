@@ -388,12 +388,13 @@ export class DiceProtocol {
 
   /**
    * Construct a provider commitment from a revelation and the number of hashes.
-   * Repeatedly hashes the revelation `numHashes` times.
+   * Repeatedly hashes the revelation `numHashes` times, each value as a full bytes32
+   * (as the contract does), so a value that starts with a zero byte is not shortened.
    */
   static constructProviderCommitment(numHashes: number, revelation: string): string {
     let current = revelation;
     for (let i = 0; i < numHashes; i++) {
-      current = ethers.keccak256(ethers.toBeHex(current));
+      current = ethers.keccak256(ethers.zeroPadValue(current, 32));
     }
     return current;
   }
